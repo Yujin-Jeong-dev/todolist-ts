@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import Button from 'ui/Button/Button';
 import { v4 as uuid } from 'uuid';
-import { addTodo } from '../../redux/modules/todos';
 import style from './AddTodo.module.css';
+import api from '../../axios/api';
+import { TodoState } from 'types/Todo';
 
 type AddTodoForm = { title: string; content: string };
 
 export default function AddTodo() {
   const [form, setForm] = useState<AddTodoForm>({ title: '', content: '' });
-  const dispatch = useDispatch();
+  const addTodo = async (newTodo: TodoState) => {
+    api.post(`/todos`, newTodo);
+  };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
@@ -19,7 +21,7 @@ export default function AddTodo() {
     setForm({ title: '', content: '' });
     if (!form.title.trim() || !form.content.trim()) return;
     const newTodo = { id: uuid(), ...form, isDone: false };
-    dispatch(addTodo(newTodo));
+    addTodo(newTodo);
   };
   return (
     <form className={style.form} onSubmit={handleSubmit}>

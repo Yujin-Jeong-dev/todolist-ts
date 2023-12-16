@@ -1,0 +1,22 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "title": "타입스크립트 공부",
+      "content": "타입스크립트 투두리스트 만들기",
+      "isDone": false
+    },
+    {
+      "id": 2,
+      "title": "운동하기",
+      "content": "유산소 30분 근력운동 30분",
+      "isDone": false
+    },
+    {
+      "id": "601eb9a0-bd12-41ae-8406-d9d581eaa012",
+      "title": "복습하기",
+      "content": "TIL 작성하기",
+      "isDone": false
+    }
+  ]
+}

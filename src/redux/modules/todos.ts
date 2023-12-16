@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Todo, TodosState } from 'types/Todo';
+import { TodoState, TodosState } from 'types/Todo';
 
 const initialState: TodosState = [];
 
@@ -7,7 +7,7 @@ export const todosSlice = createSlice({
   name: 'todos',
   initialState,
   reducers: {
-    addTodo: (state, action: PayloadAction<Todo>) => {
+    addTodo: (state, action: PayloadAction<TodoState>) => {
       state.push(action.payload);
       console.log(action.payload);
     },

@@ -1,18 +1,21 @@
-import { useDispatch } from 'react-redux';
 import style from './Todo.module.css';
 import Button from 'ui/Button/Button';
-import { deleteTodo, switchTodo } from '../../redux/modules/todos';
-import { TodosState } from 'types/Todo';
+import { TodoState, TodosState } from 'types/Todo';
+import api from '../../axios/api';
 
 export default function Todo({ todos }: { todos: TodosState }) {
-  const dispatch = useDispatch();
   const handleDelete = (id: string) => {
     if (window.confirm('삭제하시겠습니까?')) {
-      dispatch(deleteTodo(id));
+      api.delete(`/todos/${id}`);
     }
   };
-  const handleSwitch = (id: string) => {
-    dispatch(switchTodo(id));
+  const handleSwitch = async (
+    id: TodoState['id'],
+    isDone: TodoState['isDone'],
+  ) => {
+    api.patch(`/todos/${id}`, {
+      isDone: !isDone,
+    });
   };
 
   return (
@@ -28,9 +31,9 @@ export default function Todo({ todos }: { todos: TodosState }) {
             <div className={style.button}>
               <Button text="삭제" onClick={() => handleDelete(id)} />
               {isDone ? (
-                <Button text="취소" onClick={() => handleSwitch(id)} />
+                <Button text="취소" onClick={() => handleSwitch(id, isDone)} />
               ) : (
-                <Button text="완료" onClick={() => handleSwitch(id)} />
+                <Button text="완료" onClick={() => handleSwitch(id, isDone)} />
               )}
             </div>
           </li>
