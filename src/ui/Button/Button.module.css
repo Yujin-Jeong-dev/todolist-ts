@@ -1,0 +1,12 @@
+.button {
+  width: 4.5rem;
+  padding: 0.5rem 0.3rem;
+  color: white;
+  border-radius: 2rem;
+  background-color: var(--color-dark-pink);
+  cursor: pointer;
+}
+
+.button:hover {
+  transform: scale(1.1);
+}

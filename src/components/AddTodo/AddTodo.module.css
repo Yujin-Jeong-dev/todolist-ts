@@ -1,0 +1,25 @@
+.form {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: var(--color-light-pink);
+  padding: 2rem 0;
+}
+
+.div {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.input {
+  width: 250px;
+  height: 40px;
+  border-radius: 1rem;
+  border: none;
+  outline: none;
+  padding: 0.5rem 1rem;
+}
+
+.button {
+  width: 20px;
+}
