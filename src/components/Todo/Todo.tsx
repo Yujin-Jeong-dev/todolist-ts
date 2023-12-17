@@ -1,21 +1,25 @@
 import style from './Todo.module.css';
 import Button from 'ui/Button/Button';
-import { TodoState, TodosState } from 'types/Todo';
-import api from '../../axios/api';
+import { TodoState, TodosState } from '../../types/Todo';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../redux/config/configStore';
+import {
+  __deleteTodo,
+  __getTodos,
+  __switchTodo,
+} from '../../redux/modules/todosSlice';
 
 export default function Todo({ todos }: { todos: TodosState }) {
-  const handleDelete = (id: string) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const handleDelete = (id: TodoState['id']) => {
     if (window.confirm('삭제하시겠습니까?')) {
-      api.delete(`/todos/${id}`);
+      dispatch(__deleteTodo(id));
+      dispatch(__getTodos());
     }
   };
-  const handleSwitch = async (
-    id: TodoState['id'],
-    isDone: TodoState['isDone'],
-  ) => {
-    api.patch(`/todos/${id}`, {
-      isDone: !isDone,
-    });
+  const handleSwitch = (id: TodoState['id'], isDone: TodoState['isDone']) => {
+    dispatch(__switchTodo({ id, isDone }));
+    dispatch(__getTodos());
   };
 
   return (

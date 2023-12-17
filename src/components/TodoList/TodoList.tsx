@@ -1,19 +1,20 @@
 import Todo from 'components/Todo/Todo';
-import React, { useEffect, useState } from 'react';
-import api from '../../axios/api';
-import { TodosState } from 'types/Todo';
+import React, { useEffect } from 'react';
 import style from './TodoList.module.css';
+import { TodosState } from '../../types/Todo';
+import { useDispatch, useSelector } from 'react-redux';
+import { __getTodos } from '../../redux/modules/todosSlice';
+import { RootState, AppDispatch } from 'redux/config/configStore';
 
 export default function TodoList() {
-  const [todos, setTodos] = useState<TodosState>([]);
-  const getTodos = async () => {
-    const response = await api.get(`/todos`);
-    setTodos(response.data);
-  };
+  const dispatch = useDispatch<AppDispatch>();
+  const { isLoading, error, todos } = useSelector(
+    (state: RootState) => state.todos,
+  );
 
   useEffect(() => {
-    getTodos();
-  }, [todos]);
+    dispatch(__getTodos());
+  }, []);
 
   const incompletedTodos: TodosState = todos.filter(
     (todo) => todo.isDone === false,
@@ -21,6 +22,9 @@ export default function TodoList() {
   const completedTodos: TodosState = todos.filter(
     (todo) => todo.isDone === true,
   );
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <section>
