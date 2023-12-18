@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import api from '../../axios/api';
-import { TodosState, TodoState } from '../../types/Todo';
+import { TodoState } from '../../types/Todo';
 
 export type Todos = {
-  todos: TodosState;
+  todos: TodoState[];
   isLoading: boolean;
   isError: boolean;
-  error?: string;
+  error?: unknown;
 };
 const initialState: Todos = {
   todos: [],
@@ -75,7 +75,7 @@ export const todosSlice = createSlice({
     });
     builder.addCase(
       __getTodos.fulfilled,
-      (state, action: PayloadAction<TodosState>) => {
+      (state, action: PayloadAction<TodoState[]>) => {
         state.isLoading = false;
         state.isError = false;
         state.todos = action.payload;

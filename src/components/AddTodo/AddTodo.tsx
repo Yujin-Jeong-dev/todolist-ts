@@ -2,20 +2,22 @@ import React, { useState } from 'react';
 import Button from 'ui/Button/Button';
 import { v4 as uuid } from 'uuid';
 import style from './AddTodo.module.css';
-import { TodoState } from 'types/Todo';
-import { AppDispatch } from '../../redux/config/configStore';
-import { useDispatch } from 'react-redux';
-import { __addTodo, __getTodos } from '../../redux/modules/todosSlice';
+import { addTodo } from '../../axios/todo';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type AddTodoForm = { title: string; content: string };
 
 export default function AddTodo() {
-  const dispatch = useDispatch<AppDispatch>();
+  const queryClient = useQueryClient();
   const [form, setForm] = useState<AddTodoForm>({ title: '', content: '' });
-  const addTodo = (newTodo: TodoState) => {
-    dispatch(__addTodo(newTodo));
-    dispatch(__getTodos());
-  };
+
+  const addTodoMutation = useMutation({
+    mutationFn: addTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
+    },
+  });
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
@@ -25,7 +27,8 @@ export default function AddTodo() {
     setForm({ title: '', content: '' });
     if (!form.title.trim() || !form.content.trim()) return;
     const newTodo = { id: uuid(), ...form, isDone: false };
-    addTodo(newTodo);
+    addTodoMutation.mutate(newTodo);
+    //handleAdd(newTodo);
   };
   return (
     <form className={style.form} onSubmit={handleSubmit}>

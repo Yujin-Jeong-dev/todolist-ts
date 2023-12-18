@@ -1,25 +1,32 @@
 import style from './Todo.module.css';
 import Button from 'ui/Button/Button';
-import { TodoState, TodosState } from '../../types/Todo';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../redux/config/configStore';
-import {
-  __deleteTodo,
-  __getTodos,
-  __switchTodo,
-} from '../../redux/modules/todosSlice';
+import { TodoState } from '../../types/Todo';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { deleteTodo, switchTodo } from './../../axios/todo';
 
-export default function Todo({ todos }: { todos: TodosState }) {
-  const dispatch = useDispatch<AppDispatch>();
+export default function Todo({ todos }: { todos: TodoState[] }) {
+  const queryClient = useQueryClient();
+  const deleteTodoMutation = useMutation({
+    mutationFn: deleteTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
+    },
+  });
+
   const handleDelete = (id: TodoState['id']) => {
     if (window.confirm('삭제하시겠습니까?')) {
-      dispatch(__deleteTodo(id));
-      dispatch(__getTodos());
+      deleteTodoMutation.mutate(id);
     }
   };
+
+  const switchTodoMutation = useMutation({
+    mutationFn: switchTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
+    },
+  });
   const handleSwitch = (id: TodoState['id'], isDone: TodoState['isDone']) => {
-    dispatch(__switchTodo({ id, isDone }));
-    dispatch(__getTodos());
+    switchTodoMutation.mutate({ id, isDone });
   };
 
   return (

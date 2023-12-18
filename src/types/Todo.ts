@@ -4,5 +4,3 @@ export type TodoState = {
   content: string;
   isDone: boolean;
 };
-
-export type TodosState = TodoState[];
